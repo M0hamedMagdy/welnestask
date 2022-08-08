@@ -6,11 +6,11 @@ const fs = require('fs');
 const spawn = require('child-process-promise').spawn;
 
 
+
 // initialise firebase admin
 admin.initializeApp();
 
-exports.createVideoThumb = functions.storage // .runWith({timeoutSeconds:300,memory:'512MB'})
-  .object()
+exports.createVideoThumb = functions.storage.object()
   .onFinalize(async object => {
     const fileBucket = object.bucket;
     const filePath = object.name;
@@ -20,12 +20,10 @@ exports.createVideoThumb = functions.storage // .runWith({timeoutSeconds:300,mem
 
     functions.logger.log(fileBucket, filePath, contentType, dir, fileName);
 
-    // if this is not an image stop execution
     if (!contentType.startsWith('video/')) return console.log('Not an video');
 
-    // if this is not the intended directory stop execution
-    // if (!dir === 'images/books')
-    //   return console.log('Not the intended directory');
+     if (!dir === 'videos/')
+       return console.log('Not the intended directory');
 
     if (fileName.startsWith('thumb_')) {
       return console.log('Video is already a thumbnail');
@@ -62,7 +60,7 @@ exports.createVideoThumb = functions.storage // .runWith({timeoutSeconds:300,mem
       '1',
       '-an',
       '-s',
-      '400X400',
+      '260X150',
       '-ss',
       '1',
       locatThmbFilePath,

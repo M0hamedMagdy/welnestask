@@ -55,10 +55,6 @@ function App() {
   }, []);
 
 
-
-
-
-  
   return (
     <>
       <UploadForm handleUpload={handleUpload} handleUploadedVids={handleUploadedVids} />
