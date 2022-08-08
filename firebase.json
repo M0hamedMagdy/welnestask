@@ -8,6 +8,7 @@
     ]
   },
   "hosting": {
+    "site": "welnesstask",
     "public": "build",
     "ignore": [
       "firebase.json",

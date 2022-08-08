@@ -75,7 +75,6 @@ exports.createVideoThumb = functions.storage.object()
 
     functions.logger.log('Thumbmain uploaded to the bucket');
 
-    // return 'Task done';
     await fs.unlinkSync(locatThmbFilePath);
     return fs.unlinkSync(tempFilePath);
   });
