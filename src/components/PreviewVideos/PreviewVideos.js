@@ -1,12 +1,10 @@
 import React from 'react'
 
 
- function PreviewVideos() {
+ function PreviewVideos({videoUrls}) {
   return (
     <section className='video-container'>
-        <video src="#"></video>
-        <video src="#"></video>
-        <video src="#"></video>
+      {videoUrls.map((url) => <video src={url}></video>)}
     </section>
   )
 }
