@@ -63,6 +63,7 @@ section form label input[type="file" i]::-webkit-file-upload-button , section fo
 
 
 section form button { 
+    opacity: 70%;
     font-size: 1.2rem;
 }
 
