@@ -19,24 +19,30 @@ function App() {
   // The State of Videos list
  const [videoUrls, setVideoUrls] = useState([]);
 
+ 
+ function handleUploadedVids(e) {
 
-  const videosListRef = ref(storage, 'videos/')
-
-  function handleUploadedVids(e) {
-    setUploadedVideos(e.target.files[0])
+   setUploadedVideos(e.target.files[0])
+   console.log(uploadedVideos);
+   
   }
   
+  const videosListRef = ref(storage, 'videos/')
   function handleUpload(e) { 
     e.preventDefault();
-    if(uploadedVideos == null) return;
-    const videoRef = ref(storage, `videos\${uploadedVideos.name + v4()}`);
+    if(uploadedVideos == null ) return;
+    const videoRef = ref(storage, `videos/ ${uploadedVideos.name + v4()} `);
     uploadBytes(videoRef, uploadedVideos).then((snapshot) => {
+      alert("video Uploaded Successfully");
+      console.log(snapshot);
+      console.log(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+
       getDownloadURL(snapshot.ref).then((url) =>  {
-         alert('Video Uploaded');
          setVideoUrls((prev) => [...prev, url]);
       })
     })
   }
+
 
   useEffect(() => {
     listAll(videosListRef).then((res) => {
@@ -47,6 +53,8 @@ function App() {
       });
     });
   }, []);
+
+
 
 
 

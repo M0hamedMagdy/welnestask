@@ -76,14 +76,13 @@ section form button:hover ,section form label input[type="file" i]::-webkit-file
 
 
 section.video-container { 
-	flex-direction: column;
+	flex-direction: column-reverse;
 }
 
 
 video { 
 	inline-size: 80%;
 	block-size: 150px;
-	border: 1px red solid;
 	margin-block-end: 1rem;
-    border-radius: 2px;
+    border-radius: 5px;
 }
