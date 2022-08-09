@@ -21,9 +21,7 @@ function App() {
 
  
  function handleUploadedVids(e) {
-
    setUploadedVideos(e.target.files[0])
-   console.log(uploadedVideos);
    
   }
   
@@ -32,26 +30,21 @@ function App() {
   function handleUpload(e) { 
     e.preventDefault();
     if(uploadedVideos == null ) return;
-    const videoRef = ref(storage, `videos/ ${uploadedVideos.name + v4()} `);
+    const videoRef = ref(storage, `videos/${uploadedVideos.name + v4()}`);
     uploadBytes(videoRef, uploadedVideos).then((snapshot) => {
       alert("video Uploaded Successfully");
-      console.log(snapshot);
-      console.log(snapshot.bytesTransferred / snapshot.totalBytes * 100);
       getDownloadURL(snapshot.ref).then((url) =>  {
         setVideoUrls((prev) => [...prev, url]);
+        
      })
    })
   }
-
-
-
 
   useEffect(() => {
     listAll(videosListRef).then((res) => {
       res.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
           if(url.includes('thumb_')) {
-            console.log('this is a thumb')
             setThumbUrls((prev) => [...prev, url])
           } else{ 
             setVideoUrls((prev) => [...prev, url]);
@@ -60,8 +53,6 @@ function App() {
       });
     });
   }, []);
-
-  console.log(thumbUrls);
   
 
   return (

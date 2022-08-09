@@ -50,9 +50,10 @@ exports.createVideoThumb = functions.storage.object().onFinalize(async object =>
       '-s',
       '265X150',
       '-ss',
-      '30',
+      '5',
       locatThmbFilePath,
     ]);
+    
     functions.logger.log('Thumbnail has been created');
 
     await bucket.upload(locatThmbFilePath, {
@@ -63,7 +64,7 @@ exports.createVideoThumb = functions.storage.object().onFinalize(async object =>
 
     functions.logger.log('Thumbmain uploaded to the bucket');
 
-    await fs.unlinkSync(locatThmbFilePath);
+    fs.unlinkSync(locatThmbFilePath);
     return fs.unlinkSync(tempFilePath);
 
   });
