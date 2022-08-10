@@ -3,8 +3,7 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
-  listAll,
-  list,
+  listAll
 } from "firebase/storage";
 import { storage } from "./firebase";
 import {v4} from 'uuid';
@@ -18,6 +17,7 @@ function App() {
  const [uploadedVideos, setUploadedVideos] = useState(null);
   // The State of Videos list
  const [videoUrls, setVideoUrls] = useState([]);
+ const [thumbUrls, setThumbUrls] = useState([]);
 
  
  function handleUploadedVids(e) {
@@ -28,6 +28,7 @@ function App() {
   }
   
   const videosListRef = ref(storage, 'videos/')
+
   function handleUpload(e) { 
     e.preventDefault();
     if(uploadedVideos == null ) return;
@@ -36,29 +37,37 @@ function App() {
       alert("video Uploaded Successfully");
       console.log(snapshot);
       console.log(snapshot.bytesTransferred / snapshot.totalBytes * 100);
-
       getDownloadURL(snapshot.ref).then((url) =>  {
-         setVideoUrls((prev) => [...prev, url]);
-      })
-    })
+        setVideoUrls((prev) => [...prev, url]);
+     })
+   })
   }
+
+
 
 
   useEffect(() => {
     listAll(videosListRef).then((res) => {
       res.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setVideoUrls((prev) => [...prev, url]);
-        });
+          if(url.includes('thumb_')) {
+            console.log('this is a thumb')
+            setThumbUrls((prev) => [...prev, url])
+          } else{ 
+            setVideoUrls((prev) => [...prev, url]);
+          }
+          });
       });
     });
   }, []);
 
+  console.log(thumbUrls);
+  
 
   return (
     <>
       <UploadForm handleUpload={handleUpload} handleUploadedVids={handleUploadedVids} />
-      <PreviewVideos videoUrls={videoUrls} />
+      <PreviewVideos videoUrls={videoUrls} thumbUrls={thumbUrls} />
     </>
 
     );

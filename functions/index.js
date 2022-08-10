@@ -5,40 +5,28 @@ const os = require('os');
 const fs = require('fs');
 const spawn = require('child-process-promise').spawn;
 
-
-
-// initialise firebase admin
 admin.initializeApp();
 
-exports.createVideoThumb = functions.storage.object()
-  .onFinalize(async object => {
+exports.createVideoThumb = functions.storage.object().onFinalize(async object => {
+   console.log(object);
+   functions.logger.log(object)
+
     const fileBucket = object.bucket;
     const filePath = object.name;
     const contentType = object.contentType;
     const dir = path.dirname(filePath);
-    const fileName = path.basename(filePath);
+    const fileName = path.basename(filePath).trim();
 
-    functions.logger.log(fileBucket, filePath, contentType, dir, fileName);
+    functions.logger.log(fileName);
+  
+    functions.logger.log(fileBucket, filePath, contentType, dir, fileName)
 
-    if (!contentType.startsWith('video/')) return console.log('Not an video');
-
-     if (!dir === 'videos/')
-       return console.log('Not the intended directory');
-
-    if (fileName.startsWith('thumb_')) {
-      return console.log('Video is already a thumbnail');
-    }
-
-    // continue execution
-
-    // download file to memory
     const bucket = admin.storage().bucket(fileBucket);
     const tempFilePath = path.join(os.tmpdir(), fileName);
     const metadata = {
       contentType: 'image/png',
     };
 
-    // download the file from bucket to tmp disk
     try {
       const upRes = await bucket
         .file(filePath)
@@ -48,7 +36,7 @@ exports.createVideoThumb = functions.storage.object()
     } catch (error) {
       console.log('err at download bucket', error);
     }
-
+    
     const thmbFileName = `thumb_${fileName}.png`;
     const locatThmbFilePath = path.join(os.tmpdir(), thmbFileName);
     const remoteThmbFilePath = path.join(dir, thmbFileName);
@@ -60,9 +48,9 @@ exports.createVideoThumb = functions.storage.object()
       '1',
       '-an',
       '-s',
-      '260X150',
+      '265X150',
       '-ss',
-      '1',
+      '30',
       locatThmbFilePath,
     ]);
     functions.logger.log('Thumbnail has been created');
@@ -77,4 +65,5 @@ exports.createVideoThumb = functions.storage.object()
 
     await fs.unlinkSync(locatThmbFilePath);
     return fs.unlinkSync(tempFilePath);
+
   });
